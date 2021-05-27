@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Map</title>
+    <link rel="stylesheet" href="./css/style.css">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,700&display=swap" rel="stylesheet" />
+</head>
+
+<body>
+    <div id="map"></div>
+
+    <div id="modal">
+        <div class="modal__close">
+            <img src="img/close.svg" alt="">
+        </div>
+        <div class="reviews">
+            <!-- <div class="reviews__block">
+                <ul class="reviews__list">
+                    <li class="review__item">
+                        Lorem, ipsum dolor sit amet consectetur adipisicing elit. Exercitationem amet architecto ex expedita iusto, sed aperiam libero quaerat placeat numquam, velit sint error et sit voluptatibus magni odit atque eos.
+                    </li>
+           
+                </ul>
+            </div> -->
+        </div>
+
+        <div class="modal__body">
+            <h3><strong>Отзыв:</strong></h3>
+            <form id="sendForm">
+                <input type="text" id="name" placeholder="Укажите ваше имя" class="input">
+                <input type="text" id="place" placeholder="Укажите место" class="input">
+                <textarea placeholder="Оставьте отзыв" id="review" class="input">
+
+             </textarea>
+                <button id="button" class="button">Добавить</button>
+            </form>
+        </div>
+    </div>
+
+
+    <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript">
+    </script>
+    <script src="./js/map.js"></script>
+
+
+
+</body>
+
+</html>
