@@ -13,36 +13,6 @@ function init() {
     searchControlProvider: 'yandex#search'
   });
 
-
-
-
-//   var clusterer = new ymaps.Clusterer({
-//     clusterDisableClickZoom: true,
-//     clusterOpenBalloonOnClick: true,
-//     // Устанавливаем стандартный макет балуна кластера "Карусель".
-//     clusterBalloonContentLayout: 'cluster#balloonCarousel',
-//     // Устанавливаем собственный макет.
-//     clusterBalloonItemContentLayout: customItemContentLayout,
-//     // Устанавливаем режим открытия балуна.
-//     // В данном примере балун никогда не будет открываться в режиме панели.
-//     clusterBalloonPanelMaxMapArea: 0,
-//     // Устанавливаем размеры макета контента балуна (в пикселях).
-//     clusterBalloonContentLayoutWidth: 200,
-//     clusterBalloonContentLayoutHeight: 130,
-//     // Устанавливаем максимальное количество элементов в нижней панели на одной странице
-//     clusterBalloonPagerSize: 5
-//     // Настройка внешнего вида нижней панели.
-//     // Режим marker рекомендуется использовать с небольшим количеством элементов.
-//     // clusterBalloonPagerType: 'marker',
-//     // Можно отключить зацикливание списка при навигации при помощи боковых стрелок.
-//     // clusterBalloonCycling: false,
-//     // Можно отключить отображение меню навигации.
-//     // clusterBalloonPagerVisible: false
-// });
-
-// map.geoObjects.add(clusterer);
-
-
   addListeneres();
 }
 
@@ -72,17 +42,35 @@ function addListeneres() {
       iconLayout: 'default#image',
       // Своё изображение иконки метки.
       iconImageHref: 'img/pin.jpg',
+      preset: 'islands#darkOrangeDotIcon',
       // Размеры метки.
       iconImageSize: [30, 42],
     });
-    myMap.geoObjects.add(myPlacemark);
 
-//нужно вставить массив отзывов
+
+    let clusterer = new ymaps.Clusterer({
+      gridSize: 64,
+      groupByCoordinates: false,
+      hasBalloon: true,
+      hasHint: true,
+      margin: 10,
+      maxZoom: 14,
+      minClusterSize: 3,
+      showInAlphabeticalOrder: false,
+      viewportMargin: 128,
+      zoomMargin: 0,
+      clusterDisableClickZoom: true
+    });
+    
+    myMap.geoObjects.add(myPlacemark);
+    clusterer.add(myPlacemark);
+
+    //нужно вставить массив отзывов
     myPlacemark.properties.set('my-id', Date.now());
     myPlacemark.events.add('click', e => {
       console.log('marker');
-  
-      const idMark =  myPlacemark.properties.get('my-id');
+
+      const idMark = myPlacemark.properties.get('my-id');
       console.log(idMark);
     });
 
@@ -90,7 +78,14 @@ function addListeneres() {
     const modal = document.getElementById('modal');
     modal.style.display = 'none';
   });
+
+
 }
+
+
+
+
+
 
 
 function openModal(event) {
