@@ -27,6 +27,7 @@ function init() {
     clusterDisableClickZoom: true
   });
   
+  clusterer.add(myPlacemark);
   myMap.geoObjects.add(clusterer);
 
   addListeneres();
