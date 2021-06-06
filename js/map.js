@@ -7,11 +7,27 @@ ymaps.ready(init);
 function init() {
   myMap = new ymaps.Map('map', {
     center: [55.76, 37.64], // Москва
-    zoom: 10,
+    zoom: 12,
     controls: []
   }, {
     searchControlProvider: 'yandex#search'
   });
+
+  let clusterer = new ymaps.Clusterer({
+    gridSize: 64,
+    groupByCoordinates: false,
+    hasBalloon: true,
+    hasHint: true,
+    margin: 10,
+    maxZoom: 14,
+    minClusterSize: 3,
+    showInAlphabeticalOrder: false,
+    viewportMargin: 128,
+    zoomMargin: 0,
+    clusterDisableClickZoom: true
+  });
+  
+  myMap.geoObjects.add(clusterer);
 
   addListeneres();
 }
@@ -41,29 +57,14 @@ function addListeneres() {
     }, {
       iconLayout: 'default#image',
       // Своё изображение иконки метки.
-      iconImageHref: 'img/pin.jpg',
       preset: 'islands#darkOrangeDotIcon',
       // Размеры метки.
       iconImageSize: [30, 42],
     });
 
+  myMap.geoObjects.add(myPlacemark);
 
-    let clusterer = new ymaps.Clusterer({
-      gridSize: 64,
-      groupByCoordinates: false,
-      hasBalloon: true,
-      hasHint: true,
-      margin: 10,
-      maxZoom: 14,
-      minClusterSize: 3,
-      showInAlphabeticalOrder: false,
-      viewportMargin: 128,
-      zoomMargin: 0,
-      clusterDisableClickZoom: true
-    });
-    
-    myMap.geoObjects.add(myPlacemark);
-    clusterer.add(myPlacemark);
+
 
     //нужно вставить массив отзывов
     myPlacemark.properties.set('my-id', Date.now());
@@ -83,11 +84,6 @@ function addListeneres() {
 }
 
 
-
-
-
-
-
 function openModal(event) {
 
   let posX = event.getSourceEvent().originalEvent.domEvent.originalEvent.clientX;
@@ -101,7 +97,6 @@ function openModal(event) {
   modal.style.top = `${posY}px`;
 
 }
-
 
 let closeModal = document.querySelector(".modal__close");
 let modal = document.querySelector("#modal");
