@@ -1,5 +1,6 @@
 let myMap;
 let coords;
+let clusterer;
 
 // Дождёмся загрузки API и готовности DOM.
 ymaps.ready(init);
@@ -13,7 +14,7 @@ function init() {
     searchControlProvider: 'yandex#search'
   });
 
-  let clusterer = new ymaps.Clusterer({
+  clusterer = new ymaps.Clusterer({
     gridSize: 64,
     groupByCoordinates: false,
     hasBalloon: true,
@@ -26,8 +27,7 @@ function init() {
     zoomMargin: 0,
     clusterDisableClickZoom: true
   });
-  
-  clusterer.add(myPlacemark);
+
   myMap.geoObjects.add(clusterer);
 
   addListeneres();
@@ -52,20 +52,25 @@ function addListeneres() {
       return;
     }
 
-    myPlacemark = new ymaps.Placemark(coords, {
-      hintContent: 'Собственный значок метки',
-      balloonContent: 'Это красивая метка'
-    }, {
-      iconLayout: 'default#image',
-      // Своё изображение иконки метки.
-      preset: 'islands#darkOrangeDotIcon',
-      // Размеры метки.
-      iconImageSize: [30, 42],
-    });
-
-  myMap.geoObjects.add(myPlacemark);
+  const name = form.querySelector('[name="name"]'), //получаем поле name
+      place = form.querySelector('[name="place"]'), //получаем поле age
+      review = form.querySelector('[name="review"]'), //получаем поле terms
 
 
+      myPlacemark = new ymaps.Placemark(coords, {
+        // Зададим содержимое заголовка балуна.
+        balloonContentHeader: `<span href = "#">${name.value}</span><br> 
+          <span class="description">${place.value}</span>`,
+        // Зададим содержимое основной части балуна.
+        balloonContentBody: `<span>${review.value}</span>`,
+
+      });
+
+
+
+    myMap.geoObjects.add(myPlacemark);
+    clusterer.add(myPlacemark);
+  
 
     //нужно вставить массив отзывов
     myPlacemark.properties.set('my-id', Date.now());
