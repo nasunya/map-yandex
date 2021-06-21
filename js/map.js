@@ -70,13 +70,16 @@ function addListeneres() {
 
     myMap.geoObjects.add(myPlacemark);
     clusterer.add(myPlacemark);
-  
+
+    
+    event.target.reset(); //очистка формы
 
     //нужно вставить массив отзывов
     myPlacemark.properties.set('my-id', Date.now());
     myPlacemark.events.add('click', e => {
       console.log('marker');
-
+      
+      // openModal(event);
       const idMark = myPlacemark.properties.get('my-id');
       console.log(idMark);
     });
