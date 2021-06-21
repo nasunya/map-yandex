@@ -1,5 +1,6 @@
 let myMap;
 let coords;
+let clusterer;
 
 // Дождёмся загрузки API и готовности DOM.
 ymaps.ready(init);
@@ -7,41 +8,27 @@ ymaps.ready(init);
 function init() {
   myMap = new ymaps.Map('map', {
     center: [55.76, 37.64], // Москва
-    zoom: 10,
+    zoom: 12,
     controls: []
   }, {
     searchControlProvider: 'yandex#search'
   });
 
+  clusterer = new ymaps.Clusterer({
+    gridSize: 64,
+    groupByCoordinates: false,
+    hasBalloon: true,
+    hasHint: true,
+    margin: 10,
+    maxZoom: 14,
+    minClusterSize: 3,
+    showInAlphabeticalOrder: false,
+    viewportMargin: 128,
+    zoomMargin: 0,
+    clusterDisableClickZoom: true
+  });
 
-
-
-//   var clusterer = new ymaps.Clusterer({
-//     clusterDisableClickZoom: true,
-//     clusterOpenBalloonOnClick: true,
-//     // Устанавливаем стандартный макет балуна кластера "Карусель".
-//     clusterBalloonContentLayout: 'cluster#balloonCarousel',
-//     // Устанавливаем собственный макет.
-//     clusterBalloonItemContentLayout: customItemContentLayout,
-//     // Устанавливаем режим открытия балуна.
-//     // В данном примере балун никогда не будет открываться в режиме панели.
-//     clusterBalloonPanelMaxMapArea: 0,
-//     // Устанавливаем размеры макета контента балуна (в пикселях).
-//     clusterBalloonContentLayoutWidth: 200,
-//     clusterBalloonContentLayoutHeight: 130,
-//     // Устанавливаем максимальное количество элементов в нижней панели на одной странице
-//     clusterBalloonPagerSize: 5
-//     // Настройка внешнего вида нижней панели.
-//     // Режим marker рекомендуется использовать с небольшим количеством элементов.
-//     // clusterBalloonPagerType: 'marker',
-//     // Можно отключить зацикливание списка при навигации при помощи боковых стрелок.
-//     // clusterBalloonCycling: false,
-//     // Можно отключить отображение меню навигации.
-//     // clusterBalloonPagerVisible: false
-// });
-
-// map.geoObjects.add(clusterer);
-
+  myMap.geoObjects.add(clusterer);
 
   addListeneres();
 }
@@ -65,24 +52,35 @@ function addListeneres() {
       return;
     }
 
-    myPlacemark = new ymaps.Placemark(coords, {
-      hintContent: 'Собственный значок метки',
-      balloonContent: 'Это красивая метка'
-    }, {
-      iconLayout: 'default#image',
-      // Своё изображение иконки метки.
-      iconImageHref: 'img/pin.jpg',
-      // Размеры метки.
-      iconImageSize: [30, 42],
-    });
-    myMap.geoObjects.add(myPlacemark);
+  const name = form.querySelector('[name="name"]'), //получаем поле name
+      place = form.querySelector('[name="place"]'), //получаем поле age
+      review = form.querySelector('[name="review"]'), //получаем поле terms
 
-//нужно вставить массив отзывов
+
+      myPlacemark = new ymaps.Placemark(coords, {
+        // Зададим содержимое заголовка балуна.
+        balloonContentHeader: `<span href = "#">${name.value}</span><br> 
+          <span class="description">${place.value}</span>`,
+        // Зададим содержимое основной части балуна.
+        balloonContentBody: `<span>${review.value}</span>`,
+
+      });
+
+
+
+    myMap.geoObjects.add(myPlacemark);
+    clusterer.add(myPlacemark);
+
+    
+    event.target.reset(); //очистка формы
+
+    //нужно вставить массив отзывов
     myPlacemark.properties.set('my-id', Date.now());
     myPlacemark.events.add('click', e => {
       console.log('marker');
-  
-      const idMark =  myPlacemark.properties.get('my-id');
+      
+      // openModal(event);
+      const idMark = myPlacemark.properties.get('my-id');
       console.log(idMark);
     });
 
@@ -90,6 +88,8 @@ function addListeneres() {
     const modal = document.getElementById('modal');
     modal.style.display = 'none';
   });
+
+
 }
 
 
@@ -106,7 +106,6 @@ function openModal(event) {
   modal.style.top = `${posY}px`;
 
 }
-
 
 let closeModal = document.querySelector(".modal__close");
 let modal = document.querySelector("#modal");
